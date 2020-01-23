@@ -43,13 +43,28 @@ function findById(id){
 function findSteps(id){
     return db('steps').join('schemes', 'steps.scheme_id','=', 'schemes.id').where(({'schemes.id':id})).select('steps.id','schemes.scheme_name','steps.instructions');
 }
-function add(){
+function add(scheme){
+    return db('schemes').insert(scheme).then(ret => {
+        const id = ret[0];
+        console.log(id);
+        return db('schemes').where({id}).select();
+    })
+    .catch(err => {
+        return err;
+    })
+
     
 }
-function update(){
-    
+function update(changes, id){
+    return db('schemes').where({id}).update(changes).then(ret =>{
+        return db('schemes').where({id}).select();
+        }).catch(err => {
+            return err;
+        });
 }
-function remove(){
+function remove(id){
+    
+       return db('schemes').where({id}).delete(); 
     
 }
 
